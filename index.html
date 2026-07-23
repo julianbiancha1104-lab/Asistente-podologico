@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Biopodología &amp; Estética — Orientación de Salud</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+  :root{
+    --teal-deep:#0B6E76;
+    --teal-mid:#128C97;
+    --aqua:#4FD1D9;
+    --aqua-pale:#E3F6F6;
+    --bg:#F5FBFB;
+    --white:#FFFFFF;
+    --ink:#123334;
+    --ink-soft:#4E6C6E;
+    --sage:#8FAF7C;
+    --sage-bg:#EEF3E7;
+    --amber:#D99A32;
+    --amber-bg:#FBF1DE;
+    --red:#C85B4C;
+    --red-bg:#FBE9E6;
+    --whatsapp:#25D366;
+    --radius-lg:22px;
+    --radius-md:16px;
+    --radius-sm:10px;
+    --shadow:0 10px 30px rgba(11,110,118,0.10), 0 2px 8px rgba(11,110,118,0.06);
+    --focus-ring:0 0 0 3px rgba(79,209,217,0.55);
+  }
+
+  *{box-sizing:border-box;}
+  html,body{height:100%;}
+  body{
+    margin:0;
+    font-family:'Inter',sans-serif;
+    background:
+      radial-gradient(1200px 600px at 100% -10%, #DFF6F5 0%, transparent 60%),
+      radial-gradient(900px 500px at -10% 110%, #E8F8F6 0%, transparent 55%),
+      var(--bg);
+    color:var(--ink);
+    font-size:17px;
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3{font-family:'Outfit',sans-serif;}
+  button{font-family:inherit;}
+  ::selection{background:var(--aqua);color:var(--ink);}
+
+  a:focus-visible, button:focus-visible, textarea:focus-visible{
+    outline:none;
+    box-shadow:var(--focus-ring);
+  }
+
+  /* ---------- Layout shell ---------- */
+  .app-shell{
+    max-width:1180px;
+    margin:0 auto;
+    min-height:100dvh;
+    display:flex;
+    flex-direction:column;
+    padding:0 0 24px;
+  }
+
+  header.top{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    padding:18px 20px 14px;
+  }
+  .logo-mark{
+    width:64px;height:64px;flex:none;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .logo-mark img{width:100%;height:100%;object-fit:contain;}
+  .sr-only{
+    position:absolute;width:1px;height:1px;padding:0;margin:-1px;
+    overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;
+  }
+  .brand-text p{
+    margin:2px 0 0;
+    color:var(--ink-soft);
+    font-size:0.95rem;
+  }
+  .brand-text .tagline{
+    margin:1px 0 0;
+    color:var(--teal-mid);
+    font-size:0.85rem;
+    font-style:italic;
+    font-family:'Outfit',sans-serif;
+  }
+
+  main.layout{
+    flex:1;
+    display:grid;
+    grid-template-columns:300px 1fr;
+    gap:22px;
+    padding:0 20px;
+    align-items:start;
+  }
+
+  /* ---------- Sidebar (desktop clinic info) ---------- */
+  aside.info-card{
+    background:var(--white);
+    border-radius:var(--radius-lg);
+    box-shadow:var(--shadow);
+    padding:22px;
+    position:sticky;
+    top:20px;
+    display:flex;
+    flex-direction:column;
+    gap:18px;
+  }
+  aside.info-card h2{
+    font-size:1.05rem;
+    margin:0;
+    color:var(--teal-deep);
+  }
+  .service-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:12px;}
+  .service-list li{display:flex;gap:10px;align-items:flex-start;font-size:0.94rem;color:var(--ink);}
+  .service-list .dot{
+    width:26px;height:26px;flex:none;border-radius:50%;
+    background:var(--aqua-pale);color:var(--teal-deep);
+    display:flex;align-items:center;justify-content:center;font-size:0.8rem;
+  }
+  .clinic-meta{display:flex;flex-direction:column;gap:8px;font-size:0.9rem;color:var(--ink-soft);border-top:1px solid var(--aqua-pale);padding-top:16px;}
+  .clinic-meta div{display:flex;gap:8px;align-items:flex-start;}
+  .clinic-meta i{color:var(--teal-mid);width:16px;text-align:center;margin-top:3px;}
+
+  .book-btn{
+    display:flex;align-items:center;justify-content:center;gap:10px;
+    background:var(--whatsapp);
+    color:#fff;text-decoration:none;
+    font-weight:600;font-size:0.98rem;
+    padding:14px 16px;border-radius:var(--radius-md);
+    box-shadow:0 6px 16px rgba(37,211,102,0.30);
+    transition:transform .15s ease, box-shadow .15s ease;
+  }
+  .book-btn:hover{transform:translateY(-1px);box-shadow:0 8px 20px rgba(37,211,102,0.38);}
+  .book-btn i{font-size:1.2rem;}
+
+  /* ---------- Chat card ---------- */
+  section.chat-card{
+    background:var(--white);
+    border-radius:var(--radius-lg);
+    box-shadow:var(--shadow);
+    display:flex;
+    flex-direction:column;
+    height:calc(100dvh - 130px);
+    min-height:520px;
+    overflow:hidden;
+  }
+
+  .steps-bar{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    padding:16px 22px;
+    border-bottom:1px solid var(--aqua-pale);
+    background:linear-gradient(180deg,#FCFFFF,#F6FBFB);
+  }
+  .step{
+    display:flex;align-items:center;gap:8px;
+    font-size:0.85rem;color:var(--ink-soft);
+    opacity:0.55;
+    transition:opacity .25s ease, color .25s ease;
+  }
+  .step.active{opacity:1;color:var(--teal-deep);font-weight:600;}
+  .step .paw{width:18px;height:18px;object-fit:contain;}
+  .step-line{flex:1;height:2px;background:var(--aqua-pale);border-radius:2px;position:relative;overflow:hidden;}
+  .step-line::after{
+    content:'';position:absolute;inset:0;background:var(--aqua);
+    width:var(--fill,0%);transition:width .35s ease;
+  }
+
+  .chat-container{
+    flex:1;
+    overflow-y:auto;
+    padding:22px;
+    display:flex;
+    flex-direction:column;
+    gap:16px;
+    scroll-behavior:smooth;
+  }
+  .chat-container::-webkit-scrollbar{width:8px;}
+  .chat-container::-webkit-scrollbar-thumb{background:var(--aqua-pale);border-radius:8px;}
+
+  .msg-row{display:flex;gap:10px;max-width:100%;animation:rise .35s ease both;}
+  @keyframes rise{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+  .msg-row.user{flex-direction:row-reverse;}
+
+  .avatar{
+    width:36px;height:36px;flex:none;border-radius:50%;
+    background:var(--teal-deep);
+    display:flex;align-items:center;justify-content:center;
+    overflow:hidden;
+  }
+  .avatar img{width:74%;height:74%;object-fit:contain;}
+
+  .typing-dots{display:inline-flex;gap:4px;align-items:center;padding:2px 0;}
+  .typing-dots span{
+    width:7px;height:7px;border-radius:50%;background:var(--teal-mid);
+    animation:blink 1.1s infinite ease-in-out;
+  }
+  .typing-dots span:nth-child(2){animation-delay:.15s;}
+  .typing-dots span:nth-child(3){animation-delay:.3s;}
+  @keyframes blink{0%,80%,100%{opacity:0.25;}40%{opacity:1;}}
+
+  .photo-form{display:flex;flex-direction:column;gap:8px;margin-top:8px;}
+  .photo-form .thumb{
+    width:100%;max-width:220px;border-radius:12px;display:block;margin-bottom:2px;
+    border:1px solid var(--aqua-pale);
+  }
+  .photo-form input[type="text"], .photo-form input[type="tel"]{
+    border:1.5px solid var(--aqua);
+    border-radius:10px;
+    padding:9px 11px;
+    font-family:inherit;
+    font-size:0.94rem;
+    color:var(--ink);
+    background:var(--white);
+  }
+  .photo-form input::placeholder{color:var(--ink-soft);}
+  .photo-form-actions{display:flex;gap:8px;margin-top:2px;}
+  .photo-send-btn{
+    background:var(--teal-deep);color:#fff;border:none;
+    font-weight:600;font-size:0.92rem;
+    padding:10px 16px;border-radius:20px;cursor:pointer;
+    transition:background .15s ease;
+  }
+  .photo-send-btn:hover{background:var(--teal-mid);}
+  .photo-send-btn:disabled{opacity:0.6;cursor:default;}
+  .photo-cancel-btn{
+    background:transparent;color:var(--ink-soft);border:1.5px solid var(--aqua-pale);
+    font-size:0.92rem;padding:10px 14px;border-radius:20px;cursor:pointer;
+  }
+  .form-note{font-size:0.78rem;color:var(--ink-soft);}
+
+  .bubble{
+    max-width:76%;
+    padding:13px 16px;
+    border-radius:var(--radius-md);
+    font-size:1rem;
+    line-height:1.55;
+  }
+  .msg-row.assistant .bubble{
+    background:var(--aqua-pale);
+    color:var(--ink);
+    border-bottom-left-radius:4px;
+  }
+  .msg-row.user .bubble{
+    background:var(--teal-deep);
+    color:#fff;
+    border-bottom-right-radius:4px;
+  }
+  .bubble strong{color:var(--teal-deep);}
+  .msg-row.user .bubble strong{color:#fff;}
+
+  .priority-tag{
+    display:inline-flex;align-items:center;gap:6px;
+    font-size:0.82rem;font-weight:700;
+    padding:5px 11px;border-radius:20px;
+    margin-bottom:8px;
+  }
+  .priority-tag.info{background:var(--aqua-pale);color:var(--teal-deep);}
+  .priority-tag.amber{background:var(--amber-bg);color:var(--amber);}
+  .priority-tag.red{background:var(--red-bg);color:var(--red);}
+
+  /* quick reply chips */
+  .choices{
+    display:flex;flex-wrap:wrap;gap:10px;
+    padding:2px 22px 18px;
+  }
+  .choice-btn{
+    background:var(--white);
+    border:1.5px solid var(--aqua);
+    color:var(--teal-deep);
+    font-weight:600;
+    font-size:0.96rem;
+    padding:11px 18px;
+    border-radius:24px;
+    cursor:pointer;
+    transition:background .15s ease, color .15s ease, transform .1s ease;
+    min-height:46px;
+  }
+  .choice-btn:hover{background:var(--teal-deep);color:#fff;transform:translateY(-1px);}
+  .choice-btn:active{transform:translateY(0);}
+  .choice-btn.restart{border-color:var(--teal-deep);}
+
+  /* input area */
+  .input-area{
+    border-top:1px solid var(--aqua-pale);
+    padding:14px 16px;
+    background:var(--white);
+  }
+  .disclaimer-mini{
+    font-size:0.78rem;
+    color:var(--ink-soft);
+    text-align:center;
+    margin-bottom:10px;
+  }
+  .input-wrapper{
+    display:flex;
+    align-items:flex-end;
+    gap:8px;
+    background:var(--aqua-pale);
+    border-radius:26px;
+    padding:6px 6px 6px 14px;
+  }
+  .icon-button{
+    background:none;border:none;color:var(--teal-mid);
+    width:44px;height:44px;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    cursor:pointer;flex:none;font-size:1.15rem;
+    transition:background .15s ease;
+  }
+  .icon-button:hover{background:rgba(11,110,118,0.10);}
+  textarea#user-input{
+    flex:1;border:none;background:transparent;
+    resize:none;font-size:1rem;font-family:inherit;color:var(--ink);
+    padding:10px 4px;max-height:120px;
+  }
+  textarea#user-input::placeholder{color:var(--ink-soft);}
+  .send-button{
+    width:46px;height:46px;border-radius:50%;flex:none;
+    background:var(--teal-deep);border:none;cursor:pointer;
+    display:flex;align-items:center;justify-content:center;
+    transition:background .15s ease, transform .1s ease;
+  }
+  .send-button:hover{background:var(--teal-mid);}
+  .send-button:active{transform:scale(0.94);}
+  .send-button svg{width:20px;height:20px;stroke:#fff;}
+
+  footer.legal-footer{
+    padding:14px 20px 4px;
+    text-align:center;
+  }
+  .disclaimer{
+    font-size:0.82rem;
+    color:var(--ink-soft);
+    max-width:760px;margin:0 auto;
+  }
+  .disclaimer strong{color:var(--teal-deep);}
+
+  /* WhatsApp floating button */
+  .whatsapp-btn{
+    position:fixed;
+    bottom:22px;right:22px;
+    width:60px;height:60px;
+    background:var(--whatsapp);
+    border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    color:#fff;font-size:1.7rem;
+    text-decoration:none;
+    box-shadow:0 8px 22px rgba(37,211,102,0.45);
+    z-index:50;
+    transition:transform .15s ease;
+  }
+  .whatsapp-btn:hover{transform:scale(1.07);}
+
+  /* mobile info drawer trigger (hidden on desktop) */
+  .mobile-info-toggle{display:none;}
+
+  @media (max-width:920px){
+    header.top{padding:14px 14px 10px;}
+    .logo-mark{width:48px;height:48px;}
+    .brand-text p{font-size:0.82rem;}
+    .brand-text .tagline{font-size:0.74rem;}
+
+    main.layout{
+      grid-template-columns:1fr;
+      padding:0 10px;
+      gap:12px;
+    }
+    aside.info-card{
+      position:static;
+      order:2;
+    }
+    section.chat-card{
+      order:1;
+      height:calc(100dvh - 100px);
+      min-height:460px;
+      border-radius:18px;
+    }
+    .bubble{max-width:86%;font-size:0.98rem;}
+    .whatsapp-btn{bottom:16px;right:16px;width:54px;height:54px;font-size:1.5rem;}
+    footer.legal-footer{padding:10px 16px 2px;}
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{animation-duration:0.001ms !important; transition-duration:0.001ms !important;}
+  }
+</style>
+</head>
+<body>
+
+<div class="app-shell">
+
+  <header class="top">
+    <div class="logo-mark">
+      <img src="logo.png" alt="Biopodología & Estética">
+    </div>
+    <div class="brand-text">
+      <h1 class="sr-only">Biopodología &amp; Estética</h1>
+      <p>Podóloga Clínica Margarita Portilla · San Miguel</p>
+      <p class="tagline">Salud, bienestar y belleza en cada paso</p>
+    </div>
+  </header>
+
+  <main class="layout">
+
+    <aside class="info-card">
+      <h2>Nuestros tratamientos</h2>
+      <ul class="service-list">
+        <li><span class="dot"><i class="fa-solid fa-hand-holding-medical"></i></span> Onicocriptosis (uña encarnada)</li>
+        <li><span class="dot"><i class="fa-solid fa-shield-virus"></i></span> Onicomicosis (hongos en las uñas)</li>
+        <li><span class="dot"><i class="fa-solid fa-shoe-prints"></i></span> Pie diabético — control y prevención</li>
+        <li><span class="dot" style="background:var(--sage-bg);color:var(--sage);"><i class="fa-solid fa-spa"></i></span> Estética podal con tecnología de vanguardia</li>
+      </ul>
+
+      <a class="book-btn" href="https://wa.me/56945615231?text=Hola%2C%20quisiera%20agendar%20una%20hora." target="_blank">
+        <i class="fa-brands fa-whatsapp"></i> Agendar hora por WhatsApp
+      </a>
+
+      <div class="clinic-meta">
+        <div><i class="fa-solid fa-location-dot"></i> San Miguel, Región Metropolitana</div>
+        <div><i class="fa-solid fa-clock"></i> Escribe para conocer disponibilidad</div>
+        <div><i class="fa-solid fa-phone"></i> +56 9 4561 5231</div>
+      </div>
+    </aside>
+
+    <section class="chat-card">
+
+      <div class="steps-bar" id="steps-bar">
+        <div class="step active" data-step="1">
+          <img class="paw" src="logo_icon.png" alt="">
+          Cuéntanos
+        </div>
+        <div class="step-line" id="line1" style="--fill:0%"></div>
+        <div class="step" data-step="2">
+          <img class="paw" src="logo_icon.png" alt="">
+          Detalles
+        </div>
+        <div class="step-line" id="line2" style="--fill:0%"></div>
+        <div class="step" data-step="3">
+          <img class="paw" src="logo_icon.png" alt="">
+          Orientación
+        </div>
+      </div>
+
+      <div class="chat-container" id="chat-container"></div>
+
+      <div class="choices" id="choices"></div>
+
+      <div class="input-area">
+        <div class="disclaimer-mini">Este test es una orientación educativa y no reemplaza un diagnóstico médico.</div>
+        <div class="input-wrapper">
+          <input type="file" id="image-upload" accept="image/*" style="display:none;">
+          <button id="upload-btn" class="icon-button" title="Adjuntar imagen de tu consulta">
+            <i class="fa-solid fa-paperclip"></i>
+          </button>
+          <textarea id="user-input" placeholder="Escribe aquí tu consulta..." rows="1"></textarea>
+          <button id="send-btn" class="send-button" title="Enviar">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="22" y1="2" x2="11" y2="13"></line>
+              <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="legal-footer">
+    <div class="disclaimer">
+      <strong>Aviso importante:</strong> este test es una orientación educativa basada en tus síntomas y no reemplaza un diagnóstico clínico presencial. Para una evaluación segura, agenda una visita con nuestros profesionales.
+    </div>
+  </footer>
+</div>
+
+<a href="https://wa.me/56945615231?text=Hola%2C%20quisiera%20realizar%20una%20consulta." class="whatsapp-btn" target="_blank" title="Contactar por WhatsApp">
+  <i class="fa-brands fa-whatsapp"></i>
+</a>
+
+<!-- Formulario oculto: necesario para que Netlify Forms detecte y reciba las fotos de consulta -->
+<form name="foto-consulta" method="POST" data-netlify="true" netlify-honeypot="bot-field" enctype="multipart/form-data" style="display:none">
+  <input type="hidden" name="form-name" value="foto-consulta" />
+  <input name="bot-field" />
+  <input type="text" name="nombre" />
+  <input type="tel" name="telefono" />
+  <textarea name="mensaje"></textarea>
+  <input type="file" name="foto" />
+</form>
+
+<script>
+(function(){
+  const chat = document.getElementById('chat-container');
+  const choicesBox = document.getElementById('choices');
+  const input = document.getElementById('user-input');
+  const sendBtn = document.getElementById('send-btn');
+  const uploadBtn = document.getElementById('upload-btn');
+  const fileInput = document.getElementById('image-upload');
+
+  const FOOT_ICON = '<img src="logo_icon.png" alt="">';
+
+  function setStep(n){
+    document.querySelectorAll('.step').forEach(el=>{
+      el.classList.toggle('active', parseInt(el.dataset.step) <= n);
+    });
+    document.getElementById('line1').style.setProperty('--fill', n>=2 ? '100%':'0%');
+    document.getElementById('line2').style.setProperty('--fill', n>=3 ? '100%':'0%');
+  }
+
+  function addMessage(role, html){
+    const row = document.createElement('div');
+    row.className = 'msg-row ' + role;
+    row.innerHTML = role === 'assistant'
+      ? `<div class="avatar">${FOOT_ICON}</div><div class="bubble">${html}</div>`
+      : `<div class="bubble">${html}</div>`;
+    chat.appendChild(row);
+    chat.scrollTop = chat.scrollHeight;
+  }
+
+  function setChoices(list){
+    choicesBox.innerHTML = '';
+    list.forEach(opt=>{
+      const b = document.createElement('button');
+      b.className = 'choice-btn' + (opt.restart ? ' restart':'');
+      b.textContent = opt.label;
+      b.onclick = () => handleChoice(opt);
+      choicesBox.appendChild(b);
+    });
+  }
+
+  function priorityTag(level, text){
+    const cls = level === 'red' ? 'red' : level === 'amber' ? 'amber' : 'info';
+    const icon = level === 'red' ? 'fa-triangle-exclamation' : level === 'amber' ? 'fa-circle-exclamation' : 'fa-circle-info';
+    return `<div class="priority-tag ${cls}"><i class="fa-solid ${icon}"></i> ${text}</div>`;
+  }
+
+  // Contenido de cada orientación final, reutilizable tanto por los botones
+  // como por la IA clasificadora (cuando el paciente escribe libremente).
+  const renderers = {
+    onico_leve: () => finalMsg('info','Prioridad: orientativa',
+      'Un dolor leve en el borde de la uña suele responder bien a un tratamiento oportuno de <strong>onicocriptosis</strong>. Evita cortar la uña en forma redondeada o "sacar la orilla" en casa, ya que puede empeorar el cuadro.<br><br>Te recomendamos agendar una evaluación para definir el mejor tratamiento.'),
+    onico_moderado: () => finalMsg('amber','Prioridad: pronto',
+      'Cuando ya molesta al caminar, es un buen momento para tratarlo antes de que se inflame más. Evita el uso de calzado apretado mientras consigues tu hora.<br><br>Te sugerimos agendar en los próximos días.'),
+    onico_severo: () => finalMsg('red','Prioridad: alta',
+      'El enrojecimiento marcado, el pus o el dolor intenso pueden indicar una infección local que requiere atención profesional pronto. No intentes drenarla ni cortarla en casa.<br><br>Te recomendamos contactarnos hoy mismo por WhatsApp para coordinar una atención prioritaria.'),
+    micosis_reciente: () => finalMsg('info','Prioridad: orientativa',
+      'Un cambio reciente es un buen momento para actuar: mientras antes se identifique el tipo de hongo, más simple suele ser el tratamiento de la <strong>onicomicosis</strong>. Evita el esmalte cubritivo mientras te evalúan, ya que puede ocultar la evolución.<br><br>Te recomendamos agendar una evaluación.'),
+    micosis_larga: () => finalMsg('amber','Prioridad: pronto',
+      'Los cambios de más de un mes suelen necesitar un tratamiento más sostenido, y a veces se confunden con otras causas (golpes, psoriasis ungueal, etc.). Un diagnóstico correcto evita meses de tratamiento equivocado.<br><br>Te sugerimos agendar tu hora esta semana.'),
+    diabetes_urgente: () => finalMsg('red','Prioridad: alta',
+      'En personas con diabetes, cualquier herida, mancha oscura o pérdida de sensibilidad en el pie debe evaluarse pronto, ya que pueden progresar sin doler. No apliques nada en la zona ni la cubras con vendajes improvisados.<br><br><strong>Contáctanos hoy mismo por WhatsApp</strong> para coordinar una atención prioritaria de pie diabético.'),
+    diabetes_preventivo: () => finalMsg('info','Prioridad: orientativa',
+      'Excelente que pienses en prevenir. El control periódico de <strong>pie diabético</strong> ayuda a detectar a tiempo callosidades, cambios de sensibilidad o de circulación antes de que se compliquen.<br><br>Te recomendamos agendar tu control preventivo.'),
+    estetica: () => finalMsg('info','Servicio disponible',
+      'Contamos con tratamientos de <strong>estética podal</strong> con tecnología de vanguardia: spa de pies, tratamiento de callosidades, y cuidado integral de la piel del pie.<br><br>Escríbenos para conocer la disponibilidad y el tratamiento que más se ajuste a lo que buscas.'),
+  };
+
+  const flows = {
+    main: () => {
+      setStep(1);
+      addMessage('assistant', `Hola, soy la asistente virtual de <strong>Margarita Portilla</strong>. Puedo orientarte en 3 pasos según lo que sientas en tus pies. Recuerda que esto no reemplaza una evaluación presencial.<br><br>¿Con qué te puedo ayudar hoy?`);
+      setChoices([
+        {label:'🦶 Uña encarnada o dolorosa', next:'onico_q1'},
+        {label:'🍄 Hongos en las uñas', next:'micosis_q1'},
+        {label:'🩺 Soy diabético/a', next:'diabetes_q1'},
+        {label:'✨ Estética podal', next:'estetica'},
+        {label:'💬 Otra consulta', next:'otra'},
+      ]);
+    },
+
+    onico_q1: () => {
+      setStep(2);
+      addMessage('user', 'Uña encarnada o dolorosa');
+      addMessage('assistant', '¿Qué tan fuerte es el dolor o la molestia que sientes?');
+      setChoices([
+        {label:'Leve, apenas lo noto', next:'onico_leve'},
+        {label:'Moderado, molesta al caminar', next:'onico_moderado'},
+        {label:'Intenso, con pus o mucho enrojecimiento', next:'onico_severo'},
+      ]);
+    },
+    onico_leve: () => { addMessage('user','Leve, apenas lo noto'); renderers.onico_leve(); },
+    onico_moderado: () => { addMessage('user','Moderado, molesta al caminar'); renderers.onico_moderado(); },
+    onico_severo: () => { addMessage('user','Intenso, con pus o mucho enrojecimiento'); renderers.onico_severo(); },
+
+    micosis_q1: () => {
+      setStep(2);
+      addMessage('user','Hongos en las uñas');
+      addMessage('assistant','¿Hace cuánto notas el cambio de color, grosor o forma en la uña?');
+      setChoices([
+        {label:'Menos de 1 mes', next:'micosis_reciente'},
+        {label:'Más de 1 mes', next:'micosis_larga'},
+        {label:'No estoy seguro/a', next:'micosis_larga'},
+      ]);
+    },
+    micosis_reciente: () => { addMessage('user','Menos de 1 mes'); renderers.micosis_reciente(); },
+    micosis_larga: () => { addMessage('user','Más de 1 mes / no estoy seguro/a'); renderers.micosis_larga(); },
+
+    diabetes_q1: () => {
+      setStep(2);
+      addMessage('user','Soy diabético/a');
+      addMessage('assistant','¿Notas alguna herida, mancha oscura, hormigueo intenso o pérdida de sensibilidad en el pie?');
+      setChoices([
+        {label:'Sí, tengo herida o mancha', next:'diabetes_urgente'},
+        {label:'No, es un control preventivo', next:'diabetes_preventivo'},
+        {label:'No estoy seguro/a', next:'diabetes_preventivo'},
+      ]);
+    },
+    diabetes_urgente: () => { addMessage('user','Sí, tengo herida o mancha'); renderers.diabetes_urgente(); },
+    diabetes_preventivo: () => { addMessage('user','Control preventivo'); renderers.diabetes_preventivo(); },
+
+    estetica: () => { setStep(2); addMessage('user','Estética podal'); renderers.estetica(); },
+
+    otra: () => {
+      setStep(2);
+      addMessage('user','Otra consulta');
+      addMessage('assistant', 'Cuéntame con tus palabras qué te gustaría consultar, o escríbenos directo por WhatsApp para una atención personalizada.');
+      setChoices([{label:'📲 Escribir por WhatsApp', link:'https://wa.me/56945615231?text=Hola%2C%20quisiera%20realizar%20una%20consulta.'},{label:'⬅️ Volver al inicio', restart:true, next:'main'}]);
+    },
+  };
+
+  function finalMsg(level, tag, text){
+    setStep(3);
+    addMessage('assistant', priorityTag(level, tag) + '<br>' + text);
+    setChoices([
+      {label:'📲 Agendar por WhatsApp', link:'https://wa.me/56945615231?text=Hola%2C%20quisiera%20agendar%20una%20hora.'},
+      {label:'⬅️ Volver al inicio', restart:true, next:'main'},
+    ]);
+  }
+
+  function handleChoice(opt){
+    if (opt.link){ window.open(opt.link, '_blank'); return; }
+    if (opt.next && flows[opt.next]) flows[opt.next]();
+  }
+
+  function addTyping(){
+    const row = document.createElement('div');
+    row.className = 'msg-row assistant';
+    row.id = 'typing-indicator';
+    row.innerHTML = `<div class="avatar">${FOOT_ICON}</div><div class="bubble"><div class="typing-dots"><span></span><span></span><span></span></div></div>`;
+    chat.appendChild(row);
+    chat.scrollTop = chat.scrollHeight;
+  }
+  function removeTyping(){
+    const el = document.getElementById('typing-indicator');
+    if (el) el.remove();
+  }
+
+  const FALLBACK_CHOICES = [
+    {label:'📲 Escribir por WhatsApp', link:'https://wa.me/56945615231?text=Hola%2C%20quisiera%20realizar%20una%20consulta.'},
+    {label:'⬅️ Volver al inicio', restart:true, next:'main'},
+  ];
+
+  async function handleFreeText(text){
+    addMessage('user', escapeHtml(text));
+    setChoices([]);
+    addTyping();
+    try{
+      const res = await fetch('/.netlify/functions/chat-ai', {
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({ message: text })
+      });
+      const data = await res.json();
+      removeTyping();
+
+      if (data && data.category && renderers[data.category]){
+        // La IA identificó a qué orientación ya validada corresponde el mensaje.
+        renderers[data.category]();
+      } else if (data && data.category === 'otra' && data.reply){
+        // Fuera de las categorías clínicas: aquí sí responde la IA libremente,
+        // pero siempre con el mismo prompt de seguridad (nunca diagnostica).
+        setStep(3);
+        addMessage('assistant', data.reply);
+        setChoices(FALLBACK_CHOICES);
+      } else {
+        throw new Error('Respuesta no reconocida');
+      }
+    } catch(err){
+      removeTyping();
+      addMessage('assistant', 'No pude conectarme con el asistente en este momento. Elige una opción del menú, o escríbenos directo por WhatsApp para una atención personalizada.');
+      setChoices(FALLBACK_CHOICES);
+    }
+  }
+
+  function escapeHtml(s){
+    const d = document.createElement('div');
+    d.textContent = s;
+    return d.innerHTML;
+  }
+
+  sendBtn.addEventListener('click', () => {
+    const val = input.value.trim();
+    if (!val) return;
+    handleFreeText(val);
+    input.value = '';
+    input.style.height = 'auto';
+  });
+  input.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && !e.shiftKey){ e.preventDefault(); sendBtn.click(); }
+  });
+  input.addEventListener('input', () => {
+    input.style.height = 'auto';
+    input.style.height = Math.min(input.scrollHeight, 120) + 'px';
+  });
+
+  uploadBtn.addEventListener('click', () => fileInput.click());
+  fileInput.addEventListener('change', () => {
+    if (fileInput.files.length){
+      renderPhotoForm(fileInput.files[0]);
+      fileInput.value = '';
+    }
+  });
+
+  function renderPhotoForm(file){
+    addMessage('user', '📷 Imagen adjunta: ' + escapeHtml(file.name));
+
+    const uid = 'pf_' + Date.now();
+    const previewUrl = URL.createObjectURL(file);
+
+    const row = document.createElement('div');
+    row.className = 'msg-row assistant';
+    row.innerHTML = `
+      <div class="avatar">${FOOT_ICON}</div>
+      <div class="bubble">
+        Para que la Podóloga pueda revisar tu foto antes de tu cita, cuéntanos quién eres:
+        <div class="photo-form">
+          <img class="thumb" src="${previewUrl}" alt="Vista previa">
+          <input type="text" id="${uid}_nombre" placeholder="Tu nombre" />
+          <input type="tel" id="${uid}_telefono" placeholder="Tu teléfono o WhatsApp" />
+          <div class="photo-form-actions">
+            <button type="button" class="photo-send-btn" id="${uid}_send">Enviar foto a la clínica</button>
+            <button type="button" class="photo-cancel-btn" id="${uid}_cancel">Cancelar</button>
+          </div>
+          <div class="form-note" id="${uid}_status">Tu foto queda guardada de forma privada solo para el equipo clínico.</div>
+        </div>
+      </div>`;
+    chat.appendChild(row);
+    chat.scrollTop = chat.scrollHeight;
+    setChoices([]);
+
+    document.getElementById(uid + '_cancel').onclick = () => {
+      row.remove();
+      addMessage('assistant', 'Sin problema. Puedes escribir tu consulta o elegir una opción del menú.');
+      setChoices(FALLBACK_CHOICES);
+    };
+
+    document.getElementById(uid + '_send').onclick = async () => {
+      const nombre = document.getElementById(uid + '_nombre').value.trim();
+      const telefono = document.getElementById(uid + '_telefono').value.trim();
+      const statusEl = document.getElementById(uid + '_status');
+      const sendBtnEl = document.getElementById(uid + '_send');
+
+      if (!nombre || !telefono){
+        statusEl.textContent = 'Por favor completa tu nombre y teléfono antes de enviar.';
+        statusEl.style.color = 'var(--red)';
+        return;
+      }
+
+      sendBtnEl.disabled = true;
+      statusEl.style.color = 'var(--ink-soft)';
+      statusEl.textContent = 'Enviando foto…';
+
+      try{
+        const fd = new FormData();
+        fd.append('form-name', 'foto-consulta');
+        fd.append('nombre', nombre);
+        fd.append('telefono', telefono);
+        fd.append('mensaje', 'Foto enviada desde el triage web para revisión previa a la cita.');
+        fd.append('foto', file);
+
+        const res = await fetch('/', { method: 'POST', body: fd });
+        if (!res.ok) throw new Error('Fallo el envío');
+
+        row.remove();
+        addMessage('assistant', `Gracias, <strong>${escapeHtml(nombre)}</strong>. Tu foto quedó recibida y el equipo clínico la revisará antes de tu cita.<br><br>Ahora cuéntanos con palabras qué síntomas sientes, o agenda tu hora directamente.`);
+        setChoices(FALLBACK_CHOICES);
+      }catch(err){
+        statusEl.style.color = 'var(--red)';
+        statusEl.textContent = 'No se pudo enviar automáticamente. Intenta por WhatsApp.';
+        sendBtnEl.disabled = false;
+      }
+    };
+  }
+
+  flows.main();
+})();
+</script>
+</body>
+</html>
