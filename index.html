@@ -239,6 +239,34 @@
   }
   .form-note{font-size:0.78rem;color:var(--ink-soft);}
 
+  .horario-options{display:flex;flex-wrap:wrap;gap:8px;margin:2px 0 4px;}
+  .horario-btn{
+    background:var(--white);
+    border:1.5px solid var(--aqua);
+    color:var(--teal-deep);
+    font-weight:600;
+    font-size:0.9rem;
+    padding:10px 14px;
+    border-radius:20px;
+    cursor:pointer;
+    min-height:44px;
+    transition:background .15s ease, color .15s ease;
+  }
+  .horario-btn:hover{background:var(--aqua-pale);}
+  .horario-btn.selected{background:var(--teal-deep);color:#fff;border-color:var(--teal-deep);}
+  .photo-form textarea{
+    border:1.5px solid var(--aqua);
+    border-radius:10px;
+    padding:9px 11px;
+    font-family:inherit;
+    font-size:0.94rem;
+    color:var(--ink);
+    background:var(--white);
+    resize:vertical;
+    min-height:44px;
+  }
+  .photo-form textarea::placeholder{color:var(--ink-soft);}
+
   .bubble{
     max-width:76%;
     padding:13px 16px;
@@ -495,6 +523,16 @@
   <input type="file" name="foto" />
 </form>
 
+<!-- Formulario oculto: necesario para que Netlify Forms detecte y reciba las solicitudes de hora -->
+<form name="solicitud-cita" method="POST" data-netlify="true" netlify-honeypot="bot-field" style="display:none">
+  <input type="hidden" name="form-name" value="solicitud-cita" />
+  <input name="bot-field" />
+  <input type="text" name="nombre" />
+  <input type="tel" name="telefono" />
+  <input type="text" name="preferencia" />
+  <textarea name="detalle"></textarea>
+</form>
+
 <script>
 (function(){
   const chat = document.getElementById('chat-container');
@@ -571,6 +609,7 @@
         {label:'🍄 Hongos en las uñas', next:'micosis_q1'},
         {label:'🩺 Soy diabético/a', next:'diabetes_q1'},
         {label:'✨ Estética podal', next:'estetica'},
+        {label:'📅 Solo quiero agendar una hora', next:'agendar_directo'},
         {label:'💬 Otra consulta', next:'otra'},
       ]);
     },
@@ -617,6 +656,13 @@
 
     estetica: () => { setStep(2); addMessage('user','Estética podal'); renderers.estetica(); },
 
+    agendar_directo: () => {
+      setStep(2);
+      addMessage('user','Solo quiero agendar una hora');
+      addMessage('assistant','¡Con gusto! Completa tus datos y te contactaremos por WhatsApp para confirmar el día y la hora exacta.');
+      renderAppointmentForm();
+    },
+
     otra: () => {
       setStep(2);
       addMessage('user','Otra consulta');
@@ -629,6 +675,7 @@
     setStep(3);
     addMessage('assistant', priorityTag(level, tag) + '<br>' + text);
     setChoices([
+      {label:'📅 Solicitar hora', action:'appointment'},
       {label:'📲 Agendar por WhatsApp', link:'https://wa.me/56945615231?text=Hola%2C%20quisiera%20agendar%20una%20hora.'},
       {label:'⬅️ Volver al inicio', restart:true, next:'main'},
     ]);
@@ -636,6 +683,7 @@
 
   function handleChoice(opt){
     if (opt.link){ window.open(opt.link, '_blank'); return; }
+    if (opt.action === 'appointment'){ setChoices([]); renderAppointmentForm(); return; }
     if (opt.next && flows[opt.next]) flows[opt.next]();
   }
 
@@ -781,6 +829,93 @@
         row.remove();
         addMessage('assistant', `Gracias, <strong>${escapeHtml(nombre)}</strong>. Tu foto quedó recibida y el equipo clínico la revisará antes de tu cita.<br><br>Ahora cuéntanos con palabras qué síntomas sientes, o agenda tu hora directamente.`);
         setChoices(FALLBACK_CHOICES);
+      }catch(err){
+        statusEl.style.color = 'var(--red)';
+        statusEl.textContent = 'No se pudo enviar automáticamente. Intenta por WhatsApp.';
+        sendBtnEl.disabled = false;
+      }
+    };
+  }
+
+  function renderAppointmentForm(){
+    const uid = 'af_' + Date.now();
+    let horarioSeleccionado = '';
+
+    const row = document.createElement('div');
+    row.className = 'msg-row assistant';
+    row.innerHTML = `
+      <div class="avatar">${FOOT_ICON}</div>
+      <div class="bubble">
+        Cuéntanos tus datos para solicitar tu hora:
+        <div class="photo-form">
+          <input type="text" id="${uid}_nombre" placeholder="Tu nombre" />
+          <input type="tel" id="${uid}_telefono" placeholder="Tu teléfono o WhatsApp" />
+          <div class="form-note">¿Qué horario prefieres?</div>
+          <div class="horario-options" id="${uid}_horarios">
+            <button type="button" class="horario-btn" data-value="Mañana">☀️ Mañana</button>
+            <button type="button" class="horario-btn" data-value="Tarde">🌤️ Tarde</button>
+            <button type="button" class="horario-btn" data-value="Cualquier horario">🕐 Cualquier horario</button>
+          </div>
+          <textarea id="${uid}_detalle" placeholder="¿Algo más que quieras contarnos? (opcional)" rows="2"></textarea>
+          <div class="photo-form-actions">
+            <button type="button" class="photo-send-btn" id="${uid}_send">Enviar solicitud</button>
+            <button type="button" class="photo-cancel-btn" id="${uid}_cancel">Cancelar</button>
+          </div>
+          <div class="form-note" id="${uid}_status">Te contactaremos por WhatsApp para confirmar el día y la hora exacta.</div>
+        </div>
+      </div>`;
+    chat.appendChild(row);
+    chat.scrollTop = chat.scrollHeight;
+    setChoices([]);
+
+    row.querySelectorAll('.horario-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        row.querySelectorAll('.horario-btn').forEach(b => b.classList.remove('selected'));
+        btn.classList.add('selected');
+        horarioSeleccionado = btn.dataset.value;
+      });
+    });
+
+    document.getElementById(uid + '_cancel').onclick = () => {
+      row.remove();
+      addMessage('assistant', 'Sin problema. Puedes escribir tu consulta o elegir una opción del menú.');
+      setChoices(FALLBACK_CHOICES);
+    };
+
+    document.getElementById(uid + '_send').onclick = async () => {
+      const nombre = document.getElementById(uid + '_nombre').value.trim();
+      const telefono = document.getElementById(uid + '_telefono').value.trim();
+      const detalle = document.getElementById(uid + '_detalle').value.trim();
+      const statusEl = document.getElementById(uid + '_status');
+      const sendBtnEl = document.getElementById(uid + '_send');
+
+      if (!nombre || !telefono || !horarioSeleccionado){
+        statusEl.textContent = 'Completa tu nombre, teléfono y elige un horario preferido.';
+        statusEl.style.color = 'var(--red)';
+        return;
+      }
+
+      sendBtnEl.disabled = true;
+      statusEl.style.color = 'var(--ink-soft)';
+      statusEl.textContent = 'Enviando solicitud…';
+
+      try{
+        const fd = new FormData();
+        fd.append('form-name', 'solicitud-cita');
+        fd.append('nombre', nombre);
+        fd.append('telefono', telefono);
+        fd.append('preferencia', horarioSeleccionado);
+        fd.append('detalle', detalle || 'Sin detalles adicionales.');
+
+        const res = await fetch('/', { method: 'POST', body: fd });
+        if (!res.ok) throw new Error('Fallo el envío');
+
+        row.remove();
+        addMessage('assistant', `¡Gracias, <strong>${escapeHtml(nombre)}</strong>! Recibimos tu solicitud para <strong>${escapeHtml(horarioSeleccionado)}</strong>. Margarita te contactará por WhatsApp para confirmar el día y la hora exacta.`);
+        setChoices([
+          {label:'📲 Escribir por WhatsApp mientras tanto', link:'https://wa.me/56945615231?text=Hola%2C%20acabo%20de%20solicitar%20una%20hora%20en%20el%20sitio%20web.'},
+          {label:'⬅️ Volver al inicio', restart:true, next:'main'},
+        ]);
       }catch(err){
         statusEl.style.color = 'var(--red)';
         statusEl.textContent = 'No se pudo enviar automáticamente. Intenta por WhatsApp.';
